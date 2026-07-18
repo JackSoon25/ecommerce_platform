@@ -67,7 +67,7 @@ export const useCart = () => {
             const existingCartItem = cart[existingProductIndex];
             // increases itquantit by 1
             existingCartItem.quantity += 1;
-            
+
             // create a clone and modfy the clone
             const cloned = cart.with(existingProductIndex, existingCartItem);
             // replace the array in the atom
@@ -75,8 +75,41 @@ export const useCart = () => {
         }
     }
 
+    // item is a cartItem
+    const removeFromCart = (item) => {
+        // 1. find the index of the item we delete
+        const indexToDelete = cart.findIndex(i => i.product_id === item.product_id);
+
+        if (indexToDelete > -1) {
+            // 2. clone the array
+            // 3. modify the clone to delete the item by ites index
+            const cloned = cart.toSpliced(indexToDelete, 1);
+            // 4. replace the clone into the atom
+            setCart(cloned);
+        }
+    }
+
+    const modifyQuantity = (item, newQuantity) => {
+
+        if (newQuantity <=0) {
+            return;
+        }
+        // 1. find the index of the item wewant to tweak the quantity for
+        const indexToModify = cart.findIndex(i => i.product_id == item.product_id);
+
+        // 2. clone the cart item
+        const modifiedCartItem = {...cart[indexToModify]}; 
+        // 3. modify the copy of the cart item
+        modifiedCartItem.quantity = newQuantity;
+        // 3. clone the cart array
+        // 4. update the cart
+        const clonedCart = cart.with(indexToModify, modifiedCartItem);
+        // 5. replace the cart atom with the cloned
+        setCart(clonedCart);
+    }
+
     return {
-        cart, getCartTotal, addToCart
+        cart, getCartTotal, addToCart, removeFromCart, modifyQuantity
     }
 }
 

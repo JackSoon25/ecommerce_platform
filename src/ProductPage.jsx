@@ -2,10 +2,13 @@ import ProductCard from "./ProductCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCart } from "./CartStore";
+import { useFlashMessage } from "./FlashMessageStore";
+import { Link } from "wouter";
 
 export default function ProductPage() {
 
     const {addToCart} = useCart();
+    const{ showMessage } = useFlashMessage();
     const [products, setProducts] = useState([]);
     useEffect(function () {
         async function fetchData() {
@@ -46,13 +49,20 @@ export default function ProductPage() {
             <div className="row">
                 {
                     products.map((p) => {
-                        return (
+                        return ( 
                             <div className="col-md-3 mb-4" key={p.id}>
                                 <ProductCard
                                     name={p.name}
                                     price={p.price}
                                     imageUrl={p.imageUrl}
-                                    onAddToCart={()=>{addToCart(p);}}
+                                    onAddToCart={()=>{
+                                        addToCart(p);
+                                        // showMessage("Product added to shopping cart successfully.", "success");
+                                        showMessage(<div>
+                                            Product added to shopping cart successfully.   
+                                            <Link href="/cart" className="btn btn-primary btn-sm">Go to cart</Link>
+                                        </div>, "success");
+                                    }}
                                 />
                             </div>
                         )

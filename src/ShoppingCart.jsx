@@ -2,7 +2,7 @@ import { useCart } from "./CartStore";
 
 export default function ShoppingCart() {
 
-    const { cart, getCartTotal } = useCart();
+    const { cart, getCartTotal, removeFromCart, modifyQuantity } = useCart();
 
     return <>
         <div className="container mt-4">
@@ -13,13 +13,32 @@ export default function ShoppingCart() {
                         <li key={item.id} className="list-group-item d-flex justify-content-between">
                             <div>
                                 <h5>{item.name}</h5>
-                                <p>Quantity: {item.quantity}</p>
+                                <p>
+                                    <button className="btn btn-primary btn-sm ms-2 me-2"
+                                        onClick={()=>{
+                                            modifyQuantity(item, item.quantity-1);
+                                        }}
+                                        disabled={item.quantity===1}
+                                    >-</button>
+                                    Quantity: {item.quantity}
+                                    <button className="btn btn-primary btn-sm ms-2 me-2"
+                                        onClick={()=>{
+                                            modifyQuantity(item, item.quantity+1);
+                                        }}
+                                    >+</button>
+                                </p>
                             </div>
                             <div>
                                 <img src={item.imageUrl} />
                             </div>
                             <div>
                                 ${(item.price * item.quantity).toFixed(2)}
+                            </div>
+                            <div>
+                                <button className="btn btn-danger"
+                                    onClick={() => {
+                                        removeFromCart(item);
+                                    }}>Remove</button>
                             </div>
                         </li>
                     ))
