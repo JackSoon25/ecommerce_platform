@@ -16,6 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // TODO: routes
 
+app.get('/health', (req, res) =>{
+  res.json("I am working well.");
+})
+
 
 const PORT = process.env.PORT || 3000;
 
