@@ -1,1 +1,1 @@
-mysql -u root -p960221nkCN -h 127.0.0.1 
+mysql -u root -p -h 127.0.0.1 

@@ -2,6 +2,7 @@ import ProductCard from "./ProductCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function HomePage() {
 
@@ -19,7 +20,7 @@ export default function HomePage() {
         async function fetchData() {
             // when we refer to static URL (i.e. image, CSS file, JS file, JSON file)
             // it will always default to the public folder
-            const response = await axios.get("products.json");
+            const response = await axios.get(API_URL + '/products/latest');
             setProducts(response.data);
         }
         fetchData();

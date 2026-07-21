@@ -5,17 +5,27 @@ import { useCart } from "./CartStore";
 import { useFlashMessage } from "./FlashMessageStore";
 import { Link } from "wouter";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function ProductPage() {
 
     const {addToCart} = useCart();
     const{ showMessage } = useFlashMessage();
     const [products, setProducts] = useState([]);
-    useEffect(function () {
-        async function fetchData() {
-            const response = await axios.get("products.json");
+
+    // call the effect function once after the compoent renders for the first time.
+    useEffect( () => {
+        const fetchProducts = async () => {
+            const response = await axios.get(API_URL + '/products');
             setProducts(response.data);
         }
-        fetchData();
+        fetchProducts();
+        
+        // async function fetchData() {
+        //     const response = await axios.get("products.json");
+        //     setProducts(response.data);
+        // }
+        // fetchData();
     }, []);
     // const products = [
     //     {
