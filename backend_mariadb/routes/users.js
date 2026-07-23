@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const userServices = require('../services/userServices');
+const AuthenticationJWT = require('../middlewares/AuthenticateWithJWT');
 
 router.post('/register', async (req, res) => {
     try {
@@ -45,8 +46,11 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/me', async (req, res) => {
-    res.json({ message: "Getting the profile of the current logged-in user" });
+router.get('/me',[AuthenticationJWT], async (req, res) => {
+    const userId = req.userId;
+    const user = await userServices.getUserById(userId);
+    res.json({
+        ...user, password:null});
 });
 
 
