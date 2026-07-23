@@ -2,12 +2,14 @@ import { useState } from "react";
 // Link is a new component that we will use to navigate between pages;
 // useLocation is a hook that we will use to get the current URL of the browser
 import { Link, useLocation } from 'wouter';
+import { useJWT } from "./UserStore";
 
 export default function Navbar() {
 
     // creae a new state variable for the componnet
     // useState(false) means the default for state is `false`
     const [showNavBar, setShowNavBar] = useState(false);
+    const { jwt, clearJWT } = useJWT();
     // When useLocation is called, it will return an array of two items;
     // index 0 - the current location (aka URL) of the browser
     // index 1 - a function to change the current location of the browser
@@ -47,6 +49,12 @@ export default function Navbar() {
                         <li className="nav-item">
                             <Link className={`nav-link ${location === '/cart' ? 'active' : ''}`} href="/cart">Cart</Link>
                         </li>
+                        { !jwt && <li className="nav-item">
+                            <Link className={`nav-link ${location === '/login' ? 'active' : ''}`} href="/login">Login</Link>
+                        </li>}
+                        { jwt && <li className="nav-item">
+                            <button className="nav-link btn btn-link" onClick={clearJWT}>Logout</button>
+                        </li>}
                     </ul>
                 </div>
             </div>

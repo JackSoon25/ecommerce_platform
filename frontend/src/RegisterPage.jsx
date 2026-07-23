@@ -4,6 +4,9 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useLocation } from 'wouter';
 import { useFlashMessage } from './FlashMessageStore'
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Name is required").min(2, "The name must be at least 2 characters."),
@@ -44,28 +47,35 @@ export default function RegisterPage() {
         password: "",
         confirmPassword: "",
         salutation: "Mr",
-        marketingPreferences: []
+        marketingPreferences: [],
+        country: ""
     };
 
     // handle submit is called when the user submits the form
     // it takes two arguments
     // argument 1: the values of the form fields
     // argument 2: helper object that let us manipulate the form state 
-    const handleSubmit = (values, formikHelpers) => {
+    const handleSubmit = async (values, formikHelpers) => {
         // indicate that the form is in process of being submitted
         // false means to disable submittion
         formikHelpers.setSubmitting(true);
-        // alert("Form submitted");
-        setTimeout(function () {
-            console.log("The form has finished processing");
-            // enable button submission
-            formikHelpers.setSubmitting(false);
-            // TODO: have an if statement ot see if the form has been submitted properly.
-
+        // have to process the register form by sending to the backend
+        //  alert("Form submitted");
+        try {
+            const response = await axios.post(API_URL + "/users/register", values);
             // show the flash message
             showMessage("You have signed up successfully.", "success");
             setLocation("/");
-        }, 3000)
+
+        } catch (e) {
+            showMessage("There is an error submitting", "danger");
+        } finally {
+            // enable button submission
+            formikHelpers.setSubmitting(false);
+
+        }
+
+
     }
 
     return (<>
@@ -156,6 +166,18 @@ export default function RegisterPage() {
                                         />
                                         <label className="form-label" htmlFor="ms">
                                             Ms.
+                                        </label>
+                                    </div>
+                                                                        <div className="form-check form-check-inline">
+                                        <Field
+                                            type="radio"
+                                            id="dr"
+                                            className="form-check-input"
+                                            name="salutation"
+                                            value="Dr"
+                                        />
+                                        <label className="form-label" htmlFor="dr">
+                                            Dr.
                                         </label>
                                     </div>
                                 </div>

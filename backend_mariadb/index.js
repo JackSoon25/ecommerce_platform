@@ -16,13 +16,16 @@ app.use(express.urlencoded({ extended: true }));
 
 // TODO: routes
 const productRouter = require('./routes/products');
+const userRouter = require('./routes/users');
 
 
 app.get('/health', (req, res) =>{
   res.json("I am working well.");
 })
 
+// register the router
 app.use('/api/products', productRouter);
+app.use('/api/users',userRouter);
 
 
 const PORT = process.env.PORT || 3000;

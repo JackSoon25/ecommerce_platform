@@ -27,32 +27,7 @@ export default function ProductPage() {
         // }
         // fetchData();
     }, []);
-    // const products = [
-    //     {
-    //         "id": 1,
-    //         "name": "Sleek Smartwatch",
-    //         "price": 199.99,
-    //         "imageUrl": "https://picsum.photos/id/20/300/200"
-    //     },
-    //     {
-    //         "id": 2,
-    //         "name": "GoPro Camera",
-    //         "price": 299.99,
-    //         "imageUrl": "https://picsum.photos/id/21/300/200"
-    //     },
-    //     {
-    //         "id": 3,
-    //         "name": "Mini Laptop",
-    //         "price": 299.99,
-    //         "imageUrl": "https://picsum.photos/id/22/300/200"
-    //     },
-    //     {
-    //         "id": 4,
-    //         "name": "Portable Projector",
-    //         "price": 399.99,
-    //         "imageUrl": "https://picsum.photos/id/23/300/200"
-    //     }
-    // ]
+    
     return (<>
         <div className="container">
             <h1>Our Products</h1>

@@ -17,7 +17,7 @@ export const useFlashMessage = () => {
             message, type
         });
         // after 3 seconds, call clearMessage automatically
-        setTimeout(clearMessage, 6500);
+        setTimeout(clearMessage, 3000);
     }
 
     const clearMessage = ()=>{
