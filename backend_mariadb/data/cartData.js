@@ -1,5 +1,18 @@
 const pool = require('../database');
-
+/**
+ * 
+ * @param {*} userId 
+ * @returns {[
+ *  {
+ *      id: integer,
+ *      product_id: interger ,
+ *      name: string,
+ *      price: number,
+ *      description: string,
+ *      quantity: number    
+ *  }
+ * ]}
+ */
 async function getCartContents(userId) {
     const sql = `SELECT 
                     cart_items.id,

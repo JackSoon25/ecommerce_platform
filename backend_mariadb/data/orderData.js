@@ -66,7 +66,8 @@ async function updateOrderStatus(orderId, status) {
 
 
 async function updateOrderSessionId(orderId, sessionId) {
-
+    const sql = `UPDATE orders SET checkout_session_id = ? WHERE id = ?`;
+    await pool.execute(sql, [sessionId, orderId]); 
 
 }
 
