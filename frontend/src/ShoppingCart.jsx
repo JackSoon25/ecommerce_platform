@@ -1,17 +1,36 @@
 import { useCart } from "./CartStore";
 import { useEffect } from "react";
 import { useJWT } from "./UserStore";
-import { use } from "react";
+import { useFlashMessage } from "./FlashMessageStore";
+import axios from 'axios';
 
 export default function ShoppingCart() {
 
     const { cart, getCartTotal, removeFromCart, modifyQuantity, fetchCart } = useCart();
     const { jwt } = useJWT();
+    const {showMessage : showFlashMessage } = useFlashMessage();
+
     useEffect(() => {
         if (jwt) {
             fetchCart();
         }
     }, [jwt]);
+
+    const handleCheckout = async () => {
+        try {
+            const response = await axios.post(import.meta.env.VITE_API_URL + '/checkout', {}, {
+                headers:{
+                    Authorization: "Bearer " + jwt
+                }
+            })
+            // use window.location to redirect
+            window.location = response.data.url;
+
+        } catch (e) {
+            showFlashMessage("unable to checkout", "danger");
+        }
+         
+    }
 
     return <>
         <div className="container mt-4">
@@ -54,6 +73,11 @@ export default function ShoppingCart() {
                 }
             </ul>
             <h3>Total: ${getCartTotal().toFixed(2)}</h3>
+            <button 
+                className="btn btn-success"
+                onClick={()=>{
+                    handleCheckout();
+            }}>Checkout</button>
         </div>
 
 
