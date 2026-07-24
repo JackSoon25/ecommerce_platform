@@ -49,12 +49,18 @@ export default function Navbar() {
                         <li className="nav-item">
                             <Link className={`nav-link ${location === '/cart' ? 'active' : ''}`} href="/cart">Cart</Link>
                         </li>
-                        { !jwt && <li className="nav-item">
+                        {!jwt && <li className="nav-item">
                             <Link className={`nav-link ${location === '/login' ? 'active' : ''}`} href="/login">Login</Link>
                         </li>}
-                        { jwt && <li className="nav-item">
+
+                        {jwt && <li className="nav-item">
+                            <Link className={`nav-link ${location === '/profile' ? 'active' : ''}`} href="/profile">Profile</Link>
+                        </li>}
+
+                        {jwt && <li className="nav-item">
                             <button className="nav-link btn btn-link" onClick={clearJWT}>Logout</button>
                         </li>}
+
                     </ul>
                 </div>
             </div>

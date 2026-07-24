@@ -24,34 +24,51 @@ router.post('/register', async (req, res) => {
         })
 
     } catch (error) {
-        res.status(500).json({ 
-            error: error.message 
+        res.status(500).json({
+            error: error.message
         });
     }
 });
 
 router.post('/login', async (req, res) => {
-    try{
-        const {email, password} = req.body;
+    try {
+        const { email, password } = req.body;
         // get JTW token
         const token = await userServices.loginUser(email, password);
         res.json({
             message: "Login successful",
             token
         })
-    }catch(e) {
+    } catch (e) {
         res.status(401).json({
             "error": e.message
         })
     }
 });
 
-router.get('/me',[AuthenticationJWT], async (req, res) => {
+router.get('/me', [AuthenticationJWT], async (req, res) => {
     const userId = req.userId;
     const user = await userServices.getUserById(userId);
     res.json({
-        ...user, password:null});
+        ...user, password: null
+    });
 });
 
+router.put('/me', [AuthenticationJWT], async (req, res) => {
+    try {
+        const userId = req.userId;
+        await userServices.updateUser(userId, req.body);
+        res.json({
+            message: "User has been udpated."
+        })
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        })
+    }
+
+
+
+})
 
 module.exports = router;

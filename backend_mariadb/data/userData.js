@@ -17,7 +17,15 @@ async function getUserById(id) {
 
     const sql = 'SELECT * FROM users WHERE id = ?';
     const [rows] = await pool.execute(sql, [id]);
-    return rows[0] || null;
+    const user = rows[0];
+
+    if (user) {
+        const marketingSql = 'SELECT preference_id FROM user_marketing_preferences WHERE user_id = ?';
+        const [marketingRows] = await pool.execute(marketingSql, [id]);
+        const preferences = marketingRows.map(item => String(item.preference_id));
+        user.marketingPreferences = preferences;
+    }
+    return user || null;
 
 }
 
@@ -28,7 +36,7 @@ async function getUserById(id) {
 async function createUser({ name, email, password, salutation, country, marketingPreferences }) {
     const connection = await pool.getConnection();
     try {
-        
+
         await connection.beginTransaction();
 
         // 1. create user
@@ -40,7 +48,7 @@ async function createUser({ name, email, password, salutation, country, marketin
             name, email, password, salutation, country
         ]);
 
-        const newUserId =userResult.insertId;
+        const newUserId = userResult.insertId;
         // 2. for each marketing preference the user has selected
         // insert into the user's marketing_preferences table as one row
         for (let marketing_perference_id of marketingPreferences) {
@@ -54,7 +62,7 @@ async function createUser({ name, email, password, salutation, country, marketin
     } catch (e) {
         await connection.rollback();
         console.error(e);
-        throw(e);
+        throw (e);
     } finally {
         await connection.release();
     }
@@ -68,8 +76,34 @@ async function createUser({ name, email, password, salutation, country, marketin
     //   country VARCHAR(50),
 }
 
-async function updateUser() {
+async function updateUser(id, { name, email, salutation, country, marketingPreferences }) {
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        //1. update the user
+        const sql = "UPDATE users SET name=?, email=?, salutation=?, country=? WHERE id = ?";
+        await connection.execute(sql, [name, email, salutation, country, id]);
 
+        // 2. update the markeitng preferences
+        // 2a. delete all the existing marketing preferencesfor the userf
+        await connection.execute("DELETE FROM user_marketing_preferences WHERE user_id = ?", [id]);
+        // 2b. reinsert all the markeitng preferences
+        for (let marketing_perference_id of marketingPreferences) {
+            const sql = `INSERT INTO user_marketing_preferences(user_id, preference_id)
+                        VALUE (?, ?)`;
+            await connection.execute(sql, [id, marketing_perference_id]);
+        }
+        await connection.commit();
+
+    } catch (e) {
+        await connection.rollback();
+        console.error(e);
+        throw (e)
+
+    } finally {
+        await connection.release();
+
+    }
 }
 
 

@@ -52,9 +52,14 @@ async function loginUser(email, password) {
     return token;
 }
 
+async function updateUser(id, newUserDetails) {
+    await userData.updateUser(id, newUserDetails);
+}
+
 module.exports = {
     getUserByEmail,
     getUserById,
     createUser,
-    loginUser
+    loginUser,
+    updateUser
 }
