@@ -30,7 +30,8 @@ export const useFlashMessage = () => {
     // other React components
     return {
         showMessage,
-        flashMessage
+        flashMessage,
+        clearMessage
     };
 
 };

@@ -94,7 +94,7 @@ async function updateUser(id, { name, email, salutation, country, marketingPrefe
             await connection.execute(sql, [id, marketing_perference_id]);
         }
         await connection.commit();
-
+        
     } catch (e) {
         await connection.rollback();
         console.error(e);
